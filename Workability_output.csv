@@ -1,19 +1,19 @@
 
-Workability: 80.14% with a weather window of 1 hour(s) and a limit of Passage ok 1 = 0.5
+Average Workability: 98.37% for months Mar to Aug with weather window of 2 hour(s) and limit of 4.0
 
-Table of monthly mean workability with a weather window of 1 hour(s) and a limit of Passage ok 1 = 0.5
+Table of monthly mean workability with a weather window of 2 hour(s) and a limit of Sign. Wave Height (H_{m0}) [m] = 4.0
 
 Month      Mean Workability
 ---------  ------------------
-January    99.93%
-February   91.52%
-March      81.12%
-April      74.79%
-May        64.38%
-June       58.33%
-July       60.62%
-August     69.02%
-September  79.24%
-October    85.69%
-November   97.99%
-December   100.00%
+January    87.04%
+February   90.24%
+March      94.07%
+April      98.00%
+May        99.74%
+June       99.46%
+July       99.61%
+August     99.33%
+September  97.13%
+October    94.36%
+November   91.88%
+December   88.91%
