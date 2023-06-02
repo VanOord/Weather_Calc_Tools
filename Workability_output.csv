@@ -1,19 +1,19 @@
 
-Average Workability: 98.37% for months Mar to Aug with weather window of 2 hour(s) and limit of 4.0
+Workability: 81.13% with a weather window of 1 hour(s) and a limit of Sign. Wave Height - Wind-Sea (H_{m0-Sea}) [m] = 2.0
 
-Table of monthly mean workability with a weather window of 2 hour(s) and a limit of Sign. Wave Height (H_{m0}) [m] = 4.0
+Table of monthly mean workability with a weather window of 1 hour(s) and a limit of Sign. Wave Height - Wind-Sea (H_{m0-Sea}) [m] = 2.0
 
 Month      Mean Workability
 ---------  ------------------
-January    87.04%
-February   90.24%
-March      94.07%
-April      98.00%
-May        99.74%
-June       99.46%
-July       99.61%
-August     99.33%
-September  97.13%
-October    94.36%
-November   91.88%
-December   88.91%
+January    63.02%
+February   69.97%
+March      77.92%
+April      90.57%
+May        93.92%
+June       95.32%
+July       95.64%
+August     92.73%
+September  85.43%
+October    73.75%
+November   68.67%
+December   66.17%

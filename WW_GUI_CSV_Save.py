@@ -55,7 +55,7 @@ def plot_csv_data(file_path, time, investigation):
         [sg.Input(key='-WINDOW HOURS-')],
         [sg.Text('')],
         [sg.Text('Do you want to investigate workability based on certain months?')],
-        [sg.Radio('Yes', 'RADIO1', key='-RADIO YES-', default=True), sg.Radio('No', 'RADIO1', key='-RADIO NO-')],
+        [sg.Radio('Yes', 'RADIO1', key='-RADIO YES-'), sg.Radio('No', 'RADIO1', key='-RADIO NO-', default=True)],
         [sg.Text('')],
         [sg.Text('Start month:'), sg.Combo(list(calendar.month_abbr[1:]), key='-START MONTH-', enable_events=True, disabled=False)],
         [sg.Text('End month:'), sg.Combo(list(calendar.month_abbr[1:]), key='-END MONTH-', enable_events=True, disabled=False)],
