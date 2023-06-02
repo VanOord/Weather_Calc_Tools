@@ -5,13 +5,6 @@ Created on Wed May 31 17:31:26 2023
 @author: q4r
 """
 
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May 31 09:57:10 2023
-
-@author: q4r
-"""
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
