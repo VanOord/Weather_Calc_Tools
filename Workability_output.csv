@@ -1,19 +1,19 @@
 
-Workability: 81.13% with a weather window of 1 hour(s) and a limit of Sign. Wave Height - Wind-Sea (H_{m0-Sea}) [m] = 2.0
+Workability: 78.96% with a weather window of 1 hour(s) and a limit of Sign. Wave Height (H_{m0}) [m] = 2.5
 
-Table of monthly mean workability with a weather window of 1 hour(s) and a limit of Sign. Wave Height - Wind-Sea (H_{m0-Sea}) [m] = 2.0
+Table of monthly mean workability with a weather window of 1 hour(s) and a limit of Sign. Wave Height (H_{m0}) [m] = 2.5
 
 Month      Mean Workability
 ---------  ------------------
-January    63.02%
-February   69.97%
-March      77.92%
-April      90.57%
-May        93.92%
-June       95.32%
-July       95.64%
-August     92.73%
-September  85.43%
-October    73.75%
-November   68.67%
-December   66.17%
+January    58.01%
+February   65.94%
+March      74.54%
+April      88.53%
+May        94.19%
+June       94.88%
+July       95.89%
+August     92.98%
+September  84.64%
+October    71.51%
+November   64.76%
+December   61.00%

@@ -51,7 +51,7 @@ def plot_csv_data(file_path, time, investigation):
         [sg.Text('Enter the desired limit:')],
         [sg.Input(key='-LIMIT-')],
         [sg.Text('')],
-        [sg.Text('Enter the weather window duration in hours:')],
+        [sg.Text('Enter the weather window duration in hours (enter "1" for default timestep of 1 hour):')],
         [sg.Input(key='-WINDOW HOURS-')],
         [sg.Text('')],
         [sg.Text('Do you want to investigate workability based on certain months?')],
