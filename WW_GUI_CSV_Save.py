@@ -4,7 +4,6 @@ Created on Wed May 31 17:31:26 2023
 
 @author: q4r
 """
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,10 +12,20 @@ from tabulate import tabulate
 import PySimpleGUI as sg
 
 def infer_date_format(date_string):
-    formats = ['%Y-%m-%d %H:%M', '%d-%m-%Y %H:%M']
+    formats = [
+        '%Y-%m-%d %H:%M',
+        '%d-%m-%Y %H:%M',
+        '%m-%d-%Y %H:%M',
+        '%d/%m/%Y %H:%M',
+        '%m/%d/%Y %H:%M',
+        '%Y/%m/%d %H:%M',
+    ]
     for fmt in formats:
         try:
-            pd.to_datetime(date_string, format=fmt)
+            if fmt in ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M']:
+                pd.to_datetime(date_string, format=fmt, dayfirst=False)
+            else:
+                pd.to_datetime(date_string, format=fmt, dayfirst=True)
             return fmt
         except ValueError:
             continue
@@ -89,17 +98,17 @@ def plot_csv_data(file_path, time, investigation):
     
     # Perform the plotting
     first_value = str(df[time].iloc[0])
-    print(f"Date format: {first_value}")
+    print(f"First value: {first_value}")
     # Infer the date format based on the first value
     date_format = infer_date_format(first_value)
-    #print(date_format)
-    #if date_format is None:
-        #print("Unable to infer date format.")
-        #return
-
-     # Convert the time column to a datetime format with the inferred format
-    df[time] = pd.to_datetime(df[time], format=date_format)
+    print(f"Inferred date format: {date_format}")
     
+    if date_format is None:
+        print("Unable to infer date format.")
+        return
+
+    # Convert the time column to a datetime format with the inferred format
+    df[time] = pd.to_datetime(df[time], format=date_format)
     # Set the datetime column as the index
     df.set_index(time, inplace=True)
     
@@ -277,4 +286,3 @@ window.close()
 
 # Open the next GUI window to choose columns and plot the data
 plot_csv_data(file_path, "", "")
-
