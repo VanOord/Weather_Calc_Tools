@@ -16,9 +16,7 @@ def main():
         'matplotlib',
         'numpy',
         'calendar',
-        'tabulate',
-        'PySimpleGUI',
-        'os'
+        'PySimpleGUI'
     ]
 
     for package in packages:
