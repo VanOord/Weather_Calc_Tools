@@ -8,7 +8,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import calendar
-from tabulate import tabulate
 import PySimpleGUI as sg
 
 def infer_date_format(date_string):
@@ -61,7 +60,7 @@ def plot_csv_data(file_path, time, investigation):
         [sg.Input(key='-LIMIT-')],
         [sg.Text('')],
         [sg.Text('Enter the weather window duration in hours (enter "1" for default timestep of 1 hour):')],
-        [sg.Input(key='-WINDOW HOURS-')],
+        [sg.Input(key='-WINDOW SIZE-')],
         [sg.Text('')],
         [sg.Text('Do you want to investigate workability based on certain months?')],
         [sg.Radio('Yes', 'RADIO1', key='-RADIO YES-'), sg.Radio('No', 'RADIO1', key='-RADIO NO-', default=True)],
@@ -83,7 +82,7 @@ def plot_csv_data(file_path, time, investigation):
             time = values['time']
             investigation = values['investigation']
             inputted_limit = float(values['-LIMIT-'])
-            window_hours = int(values['-WINDOW HOURS-'])
+            window_size = int(values['-WINDOW SIZE-'])
             investigate_range = values['-RADIO YES-']
             start_month = values['-START MONTH-']
             end_month = values['-END MONTH-']
@@ -98,10 +97,10 @@ def plot_csv_data(file_path, time, investigation):
     
     # Perform the plotting
     first_value = str(df[time].iloc[0])
-    print(f"First value: {first_value}")
+    #print(f"First value: {first_value}") # Can print in console for debugging purposes
     # Infer the date format based on the first value
     date_format = infer_date_format(first_value)
-    print(f"Inferred date format: {date_format}")
+    #print(f"Inferred date format: {date_format}") # Can print in console for debugging purposes
     
     if date_format is None:
         print("Unable to infer date format.")
@@ -116,7 +115,7 @@ def plot_csv_data(file_path, time, investigation):
     df = df.resample('H').mean()
     #print(df[264:290])
     # Create the plot
-    fig, ax = plt.subplots(figsize=(18, 6))
+    fig, ax = plt.subplots(figsize=(14, 6))
     
     # Filter the data based on the selected months
     if investigate_range:
@@ -131,55 +130,42 @@ def plot_csv_data(file_path, time, investigation):
             # Filter the data based on the selected months
             df_filtered = df[df.index.month.isin(selected_months)]
     
-            # Calculate the window size based on the window hours
-            window_size = window_hours
-    
             # Calculate workability for the selected month range
-            values = df_filtered[investigation].values
             num_windows = len(values) - window_size + 1
             count = np.sum(np.all(values[np.arange(window_size)[:, None] + np.arange(num_windows)] < inputted_limit, axis=0))
             avg_workability = (count / len(values)) * 100
-    
+            additional_info = f"Average Workability: {avg_workability:.2f}% for months {start_month} to {end_month} with weather window of {window_size} hour(s) and limit of {inputted_limit}"
+            print(additional_info)
+            print()
             # Plot the data for the selected month range
             ax.plot(df_filtered.index, df_filtered[investigation], color='tab:blue', linewidth=0.15)
     
             # Add text box with workability value
             props = dict(boxstyle='square', facecolor='white', alpha=0.5)
-            textstr = f"Average Workability: {avg_workability:.2f}% for months {start_month} to {end_month} with weather window of {window_hours} hour(s) and limit of {inputted_limit}"
+            textstr = f"Average Workability: {avg_workability:.2f}% for months {start_month} to {end_month} with weather window of {window_size} hour(s) and limit of {inputted_limit}"
             ax.text(0.02, 0.95, textstr, transform=ax.transAxes, fontsize=12, verticalalignment='top', bbox=props, color='black')
     
-            console_output = []
-            console_output.append('')
-            console_output.append(f"Average Workability: {avg_workability:.2f}% for months {start_month} to {end_month} with weather window of {window_hours} hour(s) and limit of {inputted_limit}")
-            # Print the average workability for the selected months
-            print(f"Average Workability: {avg_workability:.2f}% for months {start_month} to {end_month} with weather window of {window_hours} hour(s) and limit of {inputted_limit}")
         except KeyError:
             print("Invalid month format. Please enter a valid capitalized month name or abbreviation.")
     else:
         # Calculate workability for the entire data range
         values = df[investigation].values
-        window_size = window_hours
-    
         num_windows = len(values) - window_size + 1
         count = np.sum(np.all(values[np.arange(window_size)[:, None] + np.arange(num_windows)] < inputted_limit, axis=0))
         workability = (count / len(values)) * 100
+        additional_info = f"Workability: {workability:.2f}% with a weather window of {window_size} hour(s) and a limit of {investigation} = {inputted_limit}"
+        print(additional_info)
+        print()
     
         # Plot the data for the entire range
         ax.plot(df.index, df[investigation], color='tab:blue', linewidth=0.15)
     
         # Add text box with workability value
         props = dict(boxstyle='square', facecolor='white', alpha=0.5)
-        textstr = f"Workability: {workability:.2f}% with a weather window of {window_hours} hour(s) and a limit of {inputted_limit}"
+        textstr = f"Workability: {workability:.2f}% with a weather window of {window_size} hour(s) and a limit of {inputted_limit}"
         ax.text(0.02, 0.95, textstr, transform=ax.transAxes, fontsize=12, verticalalignment='top', bbox=props, color='black')
-    
-        # Print the workability value
-        print(f"Workability: {workability:.2f}% with a weather window of {window_hours} hour(s) and a limit of {investigation} = {inputted_limit}")
-        # Print the workability value into the csv
-        console_output = []
-        console_output.append('')
-        console_output.append(f"Workability: {workability:.2f}% with a weather window of {window_hours} hour(s) and a limit of {investigation} = {inputted_limit}")
         
-    #Printing workability of each month
+    # PRINT MONTHLY VALUES
     start_month_num = 1
     end_month_num = 12
     selected_months_W = range(start_month_num, end_month_num + 1)
@@ -199,28 +185,31 @@ def plot_csv_data(file_path, time, investigation):
         workability_month = (count / len(values)) * 100
         month_workability_all.append(workability_month)
 
-    # Create a list of lists containing the month name and its corresponding workability value
-    table_data = [[month_name, f"{workability_month:.2f}%"] for month_name, workability_month in zip(selected_month_names_W, month_workability_all)]
-    console_output.append('')
-    console_output.append(f'Table of monthly mean workability with a weather window of {window_hours} hour(s) and a limit of {investigation} = {inputted_limit}')
-    # Print the table
-    console_output.append('')
-    console_output.append(tabulate(table_data, headers=["Month", "Mean Workability"]))
-    print(' ')
-    print(f'Table of monthly mean workability with a weather window of {window_hours} hour(s) and a limit of {investigation} = {inputted_limit}')
-    # Print the table
-    print(' ')
-    print(tabulate(table_data, headers=["Month", "Mean Workability"]))  
-    
-    # Save the console output to a CSV file
-    with open('Workability_output.csv', 'w') as file:
-        for line in console_output:
-            file.write(line + '\n')
+    # Create a DataFrame containing the month and mean workability
+    table_data = pd.DataFrame({"Month": selected_month_names_W, "Mean Workability": month_workability_all})
+    # Format the values in the "Mean Workability" column to two decimal places
+    table_data["Mean Workability"] = table_data["Mean Workability"].map("{:.2f}%".format)
+    # Print the table_data DataFrame without the index column
+    print(table_data.to_string(index=False))
 
-    # Close the file
-    file.close()
-    print(' ')
-    print('Data saved in Workability_output.csv file found in directory') 
+    # Export the DataFrame to a CSV file without the index column
+    output_file_path = "monthly_workability.csv"
+    table_data.to_csv(output_file_path, index=False)
+
+    # Read the contents of the CSV file
+    with open(output_file_path, 'r') as f:
+        csv_contents = f.read()
+
+    # Concatenate the console_output, a newline character, a space, and the table data
+    output_contents = f"{additional_info}\n\n{csv_contents}"
+
+    # Write the modified contents back to the file
+    with open(output_file_path, 'w') as f:
+        f.write(output_contents)
+
+    print()
+    print(f"Monthly mean workability table has been exported to '{output_file_path}' CSV file.")
+    print()
     
     # Plot line
     ax.axhline(y=inputted_limit, color='red', linestyle='--', linewidth=1)
