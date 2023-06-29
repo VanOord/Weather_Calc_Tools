@@ -136,7 +136,9 @@ def plot_csv_data(file_path, time, investigation):
     
             # Calculate workability for the selected month range
             values = df_filtered[investigation].values
-            avg_workability = np.mean(np.all(values[np.arange(window_size)[:, None] + np.arange(len(values) - window_size + 1)] < inputted_limit, axis=0)) * 100
+            num_windows = len(values) - window_size + 1
+            count = np.sum(np.all(values[np.arange(window_size)[:, None] + np.arange(num_windows)] < inputted_limit, axis=0))
+            avg_workability = (count / len(values)) * 100
     
             # Plot the data for the selected month range
             ax.plot(df_filtered.index, df_filtered[investigation], color='tab:blue', linewidth=0.15)
@@ -158,7 +160,9 @@ def plot_csv_data(file_path, time, investigation):
         values = df[investigation].values
         window_size = window_hours
     
-        workability = np.mean(np.all(values[np.arange(window_size)[:, None] + np.arange(len(values) - window_size + 1)] < inputted_limit, axis=0)) * 100
+        num_windows = len(values) - window_size + 1
+        count = np.sum(np.all(values[np.arange(window_size)[:, None] + np.arange(num_windows)] < inputted_limit, axis=0))
+        workability = (count / len(values)) * 100
     
         # Plot the data for the entire range
         ax.plot(df.index, df[investigation], color='tab:blue', linewidth=0.15)
@@ -190,7 +194,9 @@ def plot_csv_data(file_path, time, investigation):
 
         # Calculate workability for the current month
         values = month_data[investigation].values
-        workability_month = np.mean(np.all(values[np.arange(window_size)[:, None] + np.arange(len(values) - window_size + 1)] < inputted_limit, axis=0)) * 100
+        num_windows = len(values) - window_size + 1
+        count = np.sum(np.all(values[np.arange(window_size)[:, None] + np.arange(num_windows)] < inputted_limit, axis=0))
+        workability_month = (count / len(values)) * 100
         month_workability_all.append(workability_month)
 
     # Create a list of lists containing the month name and its corresponding workability value
