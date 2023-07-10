@@ -62,7 +62,7 @@ def plot_csv_data(file_path, time, investigation):
         [sg.Text('Enter the weather window duration in hours (enter "1" for default timestep of 1 hour):')],
         [sg.Input(key='-WINDOW SIZE-')],
         [sg.Text('')],
-        [sg.Text('Do you want to investigate workability based on certain months?')],
+        [sg.Text('Do you want to investigate persistency based on certain months?')],
         [sg.Radio('Yes', 'RADIO1', key='-RADIO YES-'), sg.Radio('No', 'RADIO1', key='-RADIO NO-', default=True)],
         [sg.Text('')],
         [sg.Text('Start month:'), sg.Combo(list(calendar.month_abbr[1:]), key='-START MONTH-', enable_events=True, disabled=False)],
@@ -128,38 +128,38 @@ def plot_csv_data(file_path, time, investigation):
         # Filter the data based on the selected months
         df_filtered = df[df.index.month.isin(selected_months)]
 
-        # Calculate workability for the selected month range
+        # Calculate persistency for the selected month range
         values = df_filtered[investigation].values
         num_windows = len(values) - window_size + 1
         count = np.sum(np.all(values[np.arange(window_size)[:, None] + np.arange(num_windows)] < inputted_limit, axis=0))
         avg_workability = (count / len(values)) * 100
-        additional_info = f"Average Workability: {avg_workability:.2f}% for months {start_month} to {end_month} with weather window of {window_size} hour(s) and limit of {inputted_limit}"
+        additional_info = f"Average Persistency: {avg_workability:.2f}% for months {start_month} to {end_month} with weather window of {window_size} hour(s) and limit of {inputted_limit}"
         print(additional_info)
         print()
         # Plot the data for the selected month range
         ax.plot(df_filtered.index, df_filtered[investigation], color='tab:blue', linewidth=0.15)
 
-        # Add text box with workability value
+        # Add text box with persistency value
         props = dict(boxstyle='square', facecolor='white', alpha=0.5)
-        textstr = f"Average Workability: {avg_workability:.2f}% for months {start_month} to {end_month} with weather window of {window_size} hour(s) and limit of {inputted_limit}"
+        textstr = f"Average Persistency: {avg_workability:.2f}% for months {start_month} to {end_month} with weather window of {window_size} hour(s) and limit of {inputted_limit}"
         ax.text(0.02, 0.95, textstr, transform=ax.transAxes, fontsize=12, verticalalignment='top', bbox=props, color='black')
     
     else:
-        # Calculate workability for the entire data range
+        # Calculate persistency for the entire data range
         values = df[investigation].values
         num_windows = len(values) - window_size + 1
         count = np.sum(np.all(values[np.arange(window_size)[:, None] + np.arange(num_windows)] < inputted_limit, axis=0))
         workability = (count / len(values)) * 100
-        additional_info = f"Workability: {workability:.2f}% with a weather window of {window_size} hour(s) and a limit of {investigation} = {inputted_limit}"
+        additional_info = f"Persistency: {workability:.2f}% with a weather window of {window_size} hour(s) and a limit of {investigation} = {inputted_limit}"
         print(additional_info)
         print()
     
         # Plot the data for the entire range
         ax.plot(df.index, df[investigation], color='tab:blue', linewidth=0.15)
     
-        # Add text box with workability value
+        # Add text box with persistency value
         props = dict(boxstyle='square', facecolor='white', alpha=0.5)
-        textstr = f"Workability: {workability:.2f}% with a weather window of {window_size} hour(s) and a limit of {inputted_limit}"
+        textstr = f"Persistency: {workability:.2f}% with a weather window of {window_size} hour(s) and a limit of {inputted_limit}"
         ax.text(0.02, 0.95, textstr, transform=ax.transAxes, fontsize=12, verticalalignment='top', bbox=props, color='black')
         
     # PRINT MONTHLY VALUES
@@ -167,7 +167,7 @@ def plot_csv_data(file_path, time, investigation):
     end_month_num = 12
     selected_months_W = range(start_month_num, end_month_num + 1)
     selected_month_names_W = [calendar.month_name[i] for i in selected_months_W]
-    # Initialize a list to store workability values for the selected months
+    # Initialize a list to store persistency values for the selected months
     month_workability_all = []
 
     # Iterate over the selected months
@@ -175,17 +175,17 @@ def plot_csv_data(file_path, time, investigation):
         # Filter the data for the current month
         month_data = df[df.index.month == month]
 
-        # Calculate workability for the current month
+        # Calculate persistency for the current month
         values = month_data[investigation].values
         num_windows = len(values) - window_size + 1
         count = np.sum(np.all(values[np.arange(window_size)[:, None] + np.arange(num_windows)] < inputted_limit, axis=0))
         workability_month = (count / len(values)) * 100
         month_workability_all.append(workability_month)
 
-    # Create a DataFrame containing the month and mean workability
-    table_data = pd.DataFrame({"Month": selected_month_names_W, "Mean Workability": month_workability_all})
-    # Format the values in the "Mean Workability" column to two decimal places
-    table_data["Mean Workability"] = table_data["Mean Workability"].map("{:.2f}%".format)
+    # Create a DataFrame containing the month and mean persistency
+    table_data = pd.DataFrame({"Month": selected_month_names_W, "Mean Persistency": month_workability_all})
+    # Format the values in the "Mean persistency" column to two decimal places
+    table_data["Mean Persistency"] = table_data["Mean Persistency"].map("{:.2f}%".format)
     # Print the table_data DataFrame without the index column
     print(table_data.to_string(index=False))
 
@@ -248,7 +248,7 @@ def plot_csv_data(file_path, time, investigation):
     # Rotate x-axis labels to avoid overlapping
     plt.xticks(rotation=45)
     #save the plot
-    plt.savefig('figure_peristency.png', dpi=300, bbox_inches='tight')
+    plt.savefig('figure_persistency.png', dpi=300, bbox_inches='tight')
     # Show the plot
     plt.show()
 
