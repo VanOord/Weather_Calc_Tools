@@ -130,9 +130,9 @@ def autosize_cells(ws):
             ws.column_dimensions[get_column_letter(idx)].width = adjusted_width
 
     # Set the width of column 1 based on its merged cells' content
-    merged_cells_content = [ws.cell(row=row_num, column=1).value for row_num in range(1, ws.max_row + 1) if ws.cell(row=row_num, column=1).value]
-    column_1_width = max([len(str(content)) +1 for content in merged_cells_content]) if merged_cells_content else 0
-    ws.column_dimensions['A'].width = column_1_width
+    #merged_cells_content = [ws.cell(row=row_num, column=1).value for row_num in range(1, ws.max_row + 1) if ws.cell(row=row_num, column=1).value]
+    #column_1_width = max([len(str(content)) +1 for content in merged_cells_content]) if merged_cells_content else 0
+    ws.column_dimensions['A'].width = 3 #column_1_width
 
     # Adjust the width of the last two columns, "Total Row" and "Accum Row", based on their content
     for idx in range(ws.max_column - 1, ws.max_column + 1):  # Only the last two columns
@@ -329,12 +329,13 @@ reversed_main_data = main_data.iloc[::-1]
 
 # Concatenate the reversed main data with the Accum and Total rows
 scatter_table_v2 = pd.concat([reversed_main_data, accum_total_rows])
-
+saved_file_name = f'Scatter Table {investigation1} vs {investigation2}.xlsx'
+#saved_file_name = "Scatter Table Output.xlsx"
 # Save the modified DataFrame to Excel
-scatter_table_v2.to_excel(f'Scatter table {investigation1} vs {investigation2}.xlsx')
+scatter_table_v2.to_excel(saved_file_name)
 
 # Load the workbook and select the sheet
-wb = load_workbook(f'Scatter table {investigation1} vs {investigation2}.xlsx')
+wb = load_workbook(saved_file_name)
 ws = wb.active
 
 add_title_and_axis_labels(ws, start_month, end_month, "", title=(f"Frequency of Occurence [%] for {investigation1} vs {investigation2}"), x_label=f"{investigation1}", y_label=f"{investigation2}")
@@ -344,8 +345,8 @@ apply_gray_header(ws)
 autosize_cells(ws)
 shade_total_accum_cells(ws)
 # Save the modified workbook
-wb.save(f'Scatter table {investigation1} vs {investigation2}.xlsx')
-webbrowser.open(f'Scatter table {investigation1} vs {investigation2}.xlsx')
+wb.save(saved_file_name)
+webbrowser.open(saved_file_name)
 # Display the completion popup message
 #sg.Popup(f"Processing complete. Data saved to Scatter table {investigation1} vs {investigation2}.xlsx")
 # Introduce a delay
