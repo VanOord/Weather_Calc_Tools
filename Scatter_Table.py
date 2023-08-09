@@ -36,7 +36,7 @@ def generate_scatter_table_v2(start_month_num=None, end_month_num=None):
     percentage_table_filtered.loc['Total Col', :] = total_col
     percentage_table_filtered.loc['Accum Col', :] = accum_col
 
-    # Round all values to 2 decimal places
+    # Round all values to 3 decimal places
     percentage_table_filtered = percentage_table_filtered.round(3)
 
     # Set the intersection of "Total" and "Accum" rows and columns to "-"
@@ -290,9 +290,7 @@ while True:
 window.close()
 
 # Create a list of columns to load based on user's input
-columns_to_load = [datetime, investigation1]
-if investigation2:
-    columns_to_load.append(investigation2)
+columns_to_load = [datetime, investigation1, investigation2]
 
 # Load the CSV with only the selected columns
 df = pd.read_csv(file_path, skiprows=data_start, usecols=columns_to_load, parse_dates=[datetime], dayfirst=True)
