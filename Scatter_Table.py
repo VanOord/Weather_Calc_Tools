@@ -37,7 +37,7 @@ def generate_scatter_table_v2(start_month_num=None, end_month_num=None):
     percentage_table_filtered.loc['Accum Col', :] = accum_col
 
     # Round all values to 2 decimal places
-    percentage_table_filtered = percentage_table_filtered.round(2)
+    percentage_table_filtered = percentage_table_filtered.round(3)
 
     # Set the intersection of "Total" and "Accum" rows and columns to "-"
     percentage_table_filtered.loc['Total Col', 'Total Row'] = '-'
@@ -351,4 +351,4 @@ webbrowser.open(f'Scatter table {investigation1} vs {investigation2}.xlsx')
 # Display the completion popup message
 #sg.Popup(f"Processing complete. Data saved to Scatter table {investigation1} vs {investigation2}.xlsx")
 # Introduce a delay
-time.sleep(5)  # waits for 10 seconds
+time.sleep(5)  # waits for 10 seconds ##THIS LINE WILL NOT WORK WITH VSCODE, ONLY IN CMD
