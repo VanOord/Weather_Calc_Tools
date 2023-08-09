@@ -13,7 +13,6 @@ def main():
     # Install or update packages
     packages = [
         'pandas',
-        'matplotlib',
         'numpy',
         'calendar',
         'PySimpleGUI'
