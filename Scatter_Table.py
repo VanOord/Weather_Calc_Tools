@@ -329,10 +329,17 @@ reversed_main_data = main_data.iloc[::-1]
 
 # Concatenate the reversed main data with the Accum and Total rows
 scatter_table_v2 = pd.concat([reversed_main_data, accum_total_rows])
-saved_file_name = f'Scatter Table {investigation1} vs {investigation2}.xlsx'
-#saved_file_name = "Scatter Table Output.xlsx"
+try:
+    saved_file_name = f'Scatter Table {investigation1} vs {investigation2}.xlsx'
+    scatter_table_v2.to_excel(saved_file_name)
+except Exception as e:
+    saved_file_name = "Scatter Table Output.xlsx"
+    scatter_table_v2.to_excel(saved_file_name)
+
+#saved_file_name = f'Scatter Table {investigation1} vs {investigation2}.xlsx'
+#saved_file_name = "Scatter Table Output.xlsx" #Maybe try and an if error statement where if the above title doesnt work then you have to use this one instead
 # Save the modified DataFrame to Excel
-scatter_table_v2.to_excel(saved_file_name)
+#scatter_table_v2.to_excel(saved_file_name)
 
 # Load the workbook and select the sheet
 wb = load_workbook(saved_file_name)
