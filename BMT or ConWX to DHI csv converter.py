@@ -20,7 +20,7 @@ layout = [
     [sg.Text("Select the input CSV file: "), sg.Input(key="-INFILE-"), sg.FileBrowse()],
     [sg.Text("Number of time component columns: (Default BMT is 6, default ConWX is 4)"), sg.Drop(values=[str(i) for i in range(1, 7)], key="-NUMCOLUMNS-")],
     [sg.Button("Process"), sg.Button("Cancel")],
-    [sg.Text('This converter file will only work with BMT or ConWX files that are identical to their specified formats.')],
+    [sg.Text('This converter tool will only work with BMT or ConWX files that are identical to their specified formats.')],
     [sg.Text('Please remove any rows before the header line if you encounter an error using this tool.')]
 ]
 #print('This converter file will only work with BMT or ConWX files that are identical to their specified formats. Please remove any rows before the header line if you encounter an error using this tool.')
@@ -65,7 +65,7 @@ while True:
             # Check if the Row after the header needs to be skipped (fourth row in default BMT format)
             row_after_header = next(reader)
             if not row_after_header[0].isdigit():
-                continue
+                print()    
             else:
                 process_row(row_after_header)
 
