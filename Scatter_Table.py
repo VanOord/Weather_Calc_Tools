@@ -261,14 +261,13 @@ data_start = find_data_start(file_path)
 chunk_df = pd.read_csv(file_path, nrows=100, skiprows=data_start)
 datetime = chunk_df.columns[0] #will be the index column, CODE ONLY WORKS IF DATEdatetime COLUMN IS FIRST
 header_names1 = list(chunk_df.columns[1:]) #Skips first column header (datetime)
-header_names2 = list(chunk_df.columns[2:]) #Skips first two column headers
 
 
 # Define the layout for the GUI window
 layout = [
         [sg.Text("Choose columns to investigate: ")],
         [sg.Text("Column 1: "), sg.Combo(header_names1, key='investigation1'), sg.Text("Limit: ")],
-        [sg.Text("Column 2: "), sg.Combo(header_names2, key='investigation2'), sg.Text("Limit: ")],
+        [sg.Text("Column 2: "), sg.Combo(header_names1, key='investigation2'), sg.Text("Limit: ")],
         [sg.Text('Do you want to create scatter table based on certain months?')],
         [sg.Radio('No', 'RADIO1', key='-RADIO NO-', default=True), sg.Radio('Yes', 'RADIO1', key='-RADIO YES-')],
         [sg.Text('              Start month:'), sg.Combo(list(calendar.month_name[1:]), key='-START MONTH-', enable_events=True, disabled=False)],
