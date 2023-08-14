@@ -6,7 +6,7 @@ import PySimpleGUI as sg
 from dateutil.parser import parse
 from openpyxl import load_workbook
 from openpyxl.formatting.rule import ColorScaleRule
-from openpyxl.styles import Border, Side, PatternFill, Alignment
+from openpyxl.styles import Border, Side, PatternFill, Alignment, Font
 from openpyxl.utils import get_column_letter
 import webbrowser
 import time
@@ -120,6 +120,17 @@ def apply_gray_header(ws):
     for cell in ws[4]:
         if cell.column != 1:  # Exclude column A (cell A4)
             cell.fill = gray_fill
+    
+    pink_fill = PatternFill(start_color="FFDAAF", end_color="FFDAAF", fill_type="solid")
+     # Loop through the cells where scatter_table_v2 is written and apply blue shading to bins below and including (4.75, 5.0]
+    start_shading = False  # Flag to determine when to start shading
+    for row in range(5, ws.max_row + 1):  # Assuming data starts from row 5
+        for col in range(2, ws.max_column + 1):  # Assuming data starts from column 2
+            cell = ws.cell(row=row, column=col)
+            if cell.value == "(4.75, 5.0]":
+                start_shading = True  # Start shading from this cell onward
+            if start_shading:
+                cell.fill = pink_fill
 
 def autosize_cells(ws):
     # Autosize columns based on the content of respective cells in row 4
@@ -129,9 +140,6 @@ def autosize_cells(ws):
             adjusted_width = len(str(cell_value))  # Add a little extra width for clarity
             ws.column_dimensions[get_column_letter(idx)].width = adjusted_width
 
-    # Set the width of column 1 based on its merged cells' content
-    #merged_cells_content = [ws.cell(row=row_num, column=1).value for row_num in range(1, ws.max_row + 1) if ws.cell(row=row_num, column=1).value]
-    #column_1_width = max([len(str(content)) +1 for content in merged_cells_content]) if merged_cells_content else 0
     ws.column_dimensions['A'].width = 3 #column_1_width
 
     # Adjust the width of the last two columns, "Total Row" and "Accum Row", based on their content
@@ -148,6 +156,7 @@ def add_title_and_axis_labels(ws, start_month, end_month, month_label, title="Ti
     # Set the title in the first row, spanning across all columns
     title_cell = ws.cell(row=1, column=2, value=title)
     ws.merge_cells(start_row=1, start_column=2, end_row=1, end_column=ws.max_column)
+    title_cell.font = Font(bold=True)
     title_cell.alignment = Alignment(horizontal="center", vertical="center")
 
     # Set the y-axis label in the fourth row, centered across all columns
@@ -191,19 +200,19 @@ def shade_total_accum_cells(ws):
     
     # Get the last two columns (assuming they are "Total" and "Accum")
     last_col = ws.max_column
-    penultimate_col = last_col - 1
+    end_col_shade = last_col - 1
     
     # Get the last two rows (assuming they are "Total" and "Accum")
     last_row = ws.max_row
-    penultimate_row = last_row - 1
+    end_row_shade = last_row - 1
     
     # Shade the last two columns
-    for row in ws.iter_rows(min_col=penultimate_col, max_col=last_col, min_row=4):
+    for row in ws.iter_rows(min_col=end_col_shade, max_col=last_col, min_row=4):
         for cell in row:
             cell.fill = light_gray_fill
 
     # Shade the last two rows
-    for col in ws.iter_cols(min_row=penultimate_row, max_row=last_row):
+    for col in ws.iter_cols(min_row=end_row_shade, max_row=last_row):
         for cell in col:
             cell.fill = light_gray_fill
 
@@ -257,10 +266,10 @@ header_names2 = list(chunk_df.columns[2:]) #Skips first two column headers
 
 # Define the layout for the GUI window
 layout = [
-        [sg.Text("Choose column(s) to investigate: ")],
-        [sg.Text("Column 1 (required): "), sg.Combo(header_names1, key='investigation1'), sg.Text("Limit: ")],
-        [sg.Text("Column 2 (optional): "), sg.Combo(header_names2, key='investigation2'), sg.Text("Limit: ")],
-        [sg.Text('Do you want to investigate persistency based on certain months?')],
+        [sg.Text("Choose columns to investigate: ")],
+        [sg.Text("Column 1: "), sg.Combo(header_names1, key='investigation1'), sg.Text("Limit: ")],
+        [sg.Text("Column 2: "), sg.Combo(header_names2, key='investigation2'), sg.Text("Limit: ")],
+        [sg.Text('Do you want to create scatter table based on certain months?')],
         [sg.Radio('No', 'RADIO1', key='-RADIO NO-', default=True), sg.Radio('Yes', 'RADIO1', key='-RADIO YES-')],
         [sg.Text('              Start month:'), sg.Combo(list(calendar.month_name[1:]), key='-START MONTH-', enable_events=True, disabled=False)],
         [sg.Text('              End month:'), sg.Combo(list(calendar.month_name[1:]), key='-END MONTH-', enable_events=True, disabled=False)],
@@ -299,11 +308,12 @@ df_datetime = df[datetime]
 # Extract month from the datetime column
 df['Month'] = df_datetime.dt.month
 
-# Define the bin edges for wave height and wave period
 x_bin = 1
 y_bin = 0.5
-height_bins = np.arange(0, df[investigation1].max() + 0.5, y_bin)
-period_bins = np.arange(0, df[investigation2].max() + 1, x_bin)
+height_bins_025 = np.arange(0, 5, 0.25)
+height_bins_05 = np.arange(5, df[investigation1].max() + y_bin, y_bin)
+height_bins = np.concatenate([height_bins_025, height_bins_05])
+period_bins = np.arange(0, df[investigation2].max() + x_bin, x_bin)
 
 # Bin the wave height and wave period values
 df['Scatter Table'] = pd.cut(df[investigation1], bins=height_bins)
@@ -335,11 +345,6 @@ try:
 except Exception as e:
     saved_file_name = "Scatter Table Output.xlsx"
     scatter_table_v2.to_excel(saved_file_name)
-
-#saved_file_name = f'Scatter Table {investigation1} vs {investigation2}.xlsx'
-#saved_file_name = "Scatter Table Output.xlsx" #Maybe try and an if error statement where if the above title doesnt work then you have to use this one instead
-# Save the modified DataFrame to Excel
-#scatter_table_v2.to_excel(saved_file_name)
 
 # Load the workbook and select the sheet
 wb = load_workbook(saved_file_name)
