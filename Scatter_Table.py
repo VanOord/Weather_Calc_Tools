@@ -262,12 +262,11 @@ chunk_df = pd.read_csv(file_path, nrows=100, skiprows=data_start)
 datetime = chunk_df.columns[0] #will be the index column, CODE ONLY WORKS IF DATEdatetime COLUMN IS FIRST
 header_names1 = list(chunk_df.columns[1:]) #Skips first column header (datetime)
 
-
 # Define the layout for the GUI window
 layout = [
         [sg.Text("Choose columns to investigate: ")],
-        [sg.Text("Column 1: "), sg.Combo(header_names1, key='investigation1'), sg.Text("Limit: ")],
-        [sg.Text("Column 2: "), sg.Combo(header_names1, key='investigation2'), sg.Text("Limit: ")],
+        [sg.Text("Column 1: "), sg.Combo(header_names1, key='investigation1')],
+        [sg.Text("Column 2: "), sg.Combo(header_names1, key='investigation2')],
         [sg.Text('Do you want to create scatter table based on certain months?')],
         [sg.Radio('No', 'RADIO1', key='-RADIO NO-', default=True), sg.Radio('Yes', 'RADIO1', key='-RADIO YES-')],
         [sg.Text('              Start month:'), sg.Combo(list(calendar.month_name[1:]), key='-START MONTH-', enable_events=True, disabled=False)],
@@ -361,4 +360,4 @@ webbrowser.open(saved_file_name)
 # Display the completion popup message
 #sg.Popup(f"Processing complete. Data saved to Scatter table {investigation1} vs {investigation2}.xlsx")
 # Introduce a delay
-time.sleep(5)  # waits for 10 seconds ##THIS LINE WILL NOT WORK WITH VSCODE, ONLY IN CMD
+time.sleep(5)  # waits for 5 seconds ##THIS LINE WILL NOT WORK WITH VSCODE, ONLY IN CMD
