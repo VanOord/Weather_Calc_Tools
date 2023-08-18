@@ -235,11 +235,11 @@ def main_calculations(file_path, time, investigation1, investigation2, investiga
 
         if overlapping_WW:
             persistency, count = calculate_persistency_multi(values, window_size, limits, values_op)
-            additional_info_parts = [f"Persistency: {persistency:.2f}% for months {start_month} through {end_month} with an overlapping weather window of {window_time} {sample_rate_type} and limit(s) of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
+            additional_info_parts = [f"Persistency: {persistency:.2f}% for months {start_month} through {end_month} with an overlapping weather window of {window_time} {window_input_label} and limit(s) of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
         else:
             persistency, count = calculate_persistency_non_overlapping_multi(values, window_size, limits, values_op)
             mean_count = count/complete_ranges_count #Mean number of WW occurrences per year
-            additional_info_parts = [f"Persistency: {persistency:.2f}% for months {start_month} through {end_month} with a non-overlapping weather window of {window_time} {sample_rate_type} and limit(s) of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
+            additional_info_parts = [f"Persistency: {persistency:.2f}% for months {start_month} through {end_month} with a non-overlapping weather window of {window_time} {window_input_label} and limit(s) of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
 
         # Append information for investigation2 if it's not blank
         if investigation2:
@@ -269,12 +269,12 @@ def main_calculations(file_path, time, investigation1, investigation2, investiga
 
         if overlapping_WW:
             persistency, count = calculate_persistency_multi(values, window_size, limits, values_op)
-            additional_info_parts = [f"Persistency: {persistency:.2f}% with an overlapping weather window of {window_time} {sample_rate_type} and limit(s) of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
+            additional_info_parts = [f"Persistency: {persistency:.2f}% with an overlapping weather window of {window_time} {window_input_label} and limit(s) of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
         else:
             persistency, count = calculate_persistency_non_overlapping_multi(values, window_size, limits, values_op)
             #Mean number of occurences per year based on total number of counts by number of full months times 12
             mean_count = (count/num_full_months_approx)*12
-            additional_info_parts = [f"Persistency: {persistency:.2f}% with a non-overlapping weather window of {window_time} {sample_rate_type} and limit(s) of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
+            additional_info_parts = [f"Persistency: {persistency:.2f}% with a non-overlapping weather window of {window_time} {window_input_label} and limit(s) of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
 
         # Append information for investigation2 if it's not blank
         if investigation2:
