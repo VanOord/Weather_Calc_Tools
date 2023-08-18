@@ -205,11 +205,11 @@ def main_calculations(file_path, time, investigation1):
 
         if overlapping_WW:
             persistency, count = calculate_persistency(values1, window_size, limit1, values_op)
-            additional_info_parts = [f"Persistency: {persistency:.2f}% for months {start_month} through {end_month} with an overlapping weather window of {window_time} {sample_rate_type} and a limit of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
+            additional_info_parts = [f"Persistency: {persistency:.2f}% for months {start_month} through {end_month} with an overlapping weather window of {window_time} {window_input_label} and a limit of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
         else:
             persistency, count = calculate_persistency_non_overlapping(values1, window_size, limit1, values_op)
             mean_count = count/complete_ranges_count #Mean number of WW occurrences per year
-            additional_info_parts = [f"Persistency: {persistency:.2f}% for months {start_month} through {end_month} with a non-overlapping weather window of {window_time} {sample_rate_type} and a limit of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
+            additional_info_parts = [f"Persistency: {persistency:.2f}% for months {start_month} through {end_month} with a non-overlapping weather window of {window_time} {window_input_label} and a limit of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
 
         if overlapping_WW == False:
             # Append the additional provided content
@@ -227,12 +227,12 @@ def main_calculations(file_path, time, investigation1):
 
         if overlapping_WW:
             persistency, count = calculate_persistency(values1, window_size, limit1, values_op)
-            additional_info_parts = [f"Persistency: {persistency:.2f}% with an overlapping weather window of {window_time} {sample_rate_type} and a limit of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
+            additional_info_parts = [f"Persistency: {persistency:.2f}% with an overlapping weather window of {window_time} {window_input_label} and a limit of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
         else:
             persistency, count = calculate_persistency_non_overlapping(values1, window_size, limit1, values_op)
             #Mean number of occurences per year based on total number of counts by number of full months times 12
             mean_count = (count/num_full_months_approx)*12
-            additional_info_parts = [f"Persistency: {persistency:.2f}% with a non-overlapping weather window of {window_time} {sample_rate_type} and a limit of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
+            additional_info_parts = [f"Persistency: {persistency:.2f}% with a non-overlapping weather window of {window_time} {window_input_label} and a limit of {investigation1} {('<=' if values_op == '-RADIO BELOW-' else '>=')} {limit1}"]
 
         if overlapping_WW == False:
             # Append the additional provided content
@@ -244,22 +244,22 @@ def main_calculations(file_path, time, investigation1):
         output_messages.append(additional_info)
         output_messages.append("")
     
-        # Add a trace of the chosen variable data to the figure
-        fig.add_trace(go.Scatter(x=df.index, y=df[investigation1], mode='lines', line={'color':'#1776d4', 'width': 1}, hovertemplate='%{x|%Y-%b}: %{y}<extra></extra>')) #2d9fe0
+    # Add a trace of the chosen variable data to the figure
+    fig.add_trace(go.Scatter(x=df.index, y=df[investigation1], mode='lines', line={'color':'#1776d4', 'width': 1}, hovertemplate='%{x|%Y-%b}: %{y}<extra></extra>')) #2d9fe0
 
-        textstr = additional_info #For the figure
-        fig.add_annotation(
-            x=0,
-            y=0.95,
-            xref='paper',
-            yref='paper',
-            text=textstr,
-            showarrow=False,
-            bgcolor='white',
-            bordercolor='black',
-            borderwidth=1,
-            borderpad=4
-        )
+    textstr = additional_info #For the figure
+    fig.add_annotation(
+        x=0,
+        y=0.95,
+        xref='paper',
+        yref='paper',
+        text=textstr,
+        showarrow=False,
+        bgcolor='white',
+        bordercolor='black',
+        borderwidth=1,
+        borderpad=4
+    )
     # Creation of tables and output file
     start_year = df.index.min().year
     end_year = df.index.max().year
